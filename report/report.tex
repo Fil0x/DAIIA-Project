@@ -1,0 +1,191 @@
+% Very simple template for lab reports. Most common packages are already included.
+\documentclass[a4paper, 11pt]{article}
+\usepackage[utf8]{inputenc} % Change according your file encoding
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\title{\textbf{Distributed Artificial Intelligence and Intelligent Agents Project}}
+\author{KTH Royal Institute of Technology \\ 
+		School of Information and Communication Technology \\
+		Student:Fanti Machmount Al Samisti (fmas@kth.se) \\
+		Student:August Bonds (bonds@kth.se)}
+
+\begin{document}
+	
+\maketitle
+
+\section{Introduction}
+
+Stub
+
+\section{Task 1 - GAIIAAAA}
+\subsection{Requirements Statement}
+\subsubsection{Commonalities}
+General Commonality Requirements
+\begin{itemize}
+\item The curators and artifact manager should be fault tolerant
+\item 
+\end{itemize}
+Self-Optimization Commonality Requirements
+
+\begin{itemize}
+\item The curator should only bid on profitable auctions.
+\item The curator should minimize the processing on every profiler query.
+\item The artifact manager should adapt the price setting and price reductions to the demand and item quality.
+\item The profiler should optimize bidding strategy according to client interests.
+\item The artifact manager should post multiple auctions if demand is high. 
+\item The artifact manager should post more low-quality items for a high price if multiple items go unsold. 
+\end{itemize}
+Self-Healing Commonality Requirements
+\begin{itemize}
+\item If there is a database corruption, artist manager should renegotiate with curators. 
+\end{itemize}
+
+Self-Protection Commonality Requirements
+\begin{itemize}
+\item The artist manager should detect collusions and increase the minimum price.
+\item Every transaction should be atomic and persistent.
+\end{itemize}
+
+Miscellaneous Commonality Requirements
+\begin{itemize}
+\item bla
+\end{itemize}
+
+\section{Task 5 - Framework comparison}
+
+https://en.wikipedia.org/wiki/FIPA \\
+Options(Choose 2) \\
+Looks too corporate-y - http://www.agent-software.com.au/products/jack/ \\
+JIAC - IJava framework - http://repositories.dai-labor.de/sites/jiactng/5.1.5/ \\
+SPADE - Python framework - https://github.com/javipalanca/spade \\
+JADEX - https://www.activecomponents.org/bin/view/About/Features \\
+
+My choice would be the SPADE and JADEX. \\
+
+We have to compare:
+\begin{itemize}
+	\item Architecture of platform
+	\item Services provided by it
+	\item Comparison of implementaBon of a simple scenario	same as	Question 2 (i.e.	Service Implementation,	Service	Registration and Service Discovery)
+	\item Notable projects using it
+	\item Personal opinion on practical issues compared to JADE, we could use point 3 as a starting point.
+\end{itemize}
+
+\textbf{FIPA compliance}: 
+\begin{itemize}
+	\item Agent Communication Channel(ACC): A mechanism which allows the platform and the agents in it to communicate with each other.
+	\item Agent Management System(AMS): A way for the agents to be registered in the platform and be reachable for contact.
+	\item Directory Facilitator(DF): Agents have the ability to publish services they offer, essentially yellow pages.
+	\item Agent Communication Language(ACL): Common agent language, two possible syntaxes XML or Lisp based.
+\end{itemize}
+
+\subsection{SPADE}
+
+Agent platform based on XMPP and Jabber. User(agent) and Server(platform). Agents can be in any programming language if they conform to XMPP protocol.
+
+\textbf{XMPP}: XML inspired protocol for instant messaging and presence information. Jabber protocol at its core follows XMPP. It is an open standard and extensible. Noteable uses: Pidgin, Google Talk, iChat. \\
+Features: \\
+\begin{itemize}
+	\item Open, public, free
+	\item Asynchronous: If user online guarantee of delivery, if offline store and forward message until the client reconnects. Ease of talking with non-human systems.
+	\item Decentralized: Anyone can have a server, in fact its a server network, choice of whether to trust a server.
+	\item Secure
+	\item Extensible
+	\item Flexible: XML messaging based tech has a myriad of uses, IM is just one of them. Jabber applications beyond IM include network management, content syndication, collaboration tools, file sharing, gaming, remote systems monitoring and, now, agent communication.
+\end{itemize}
+
+\textbf{SPADE Agent Library}\\
+Module to build SPADE agents that work with the SPADE Agent Platform.
+
+\textbf{SPADE Agent Model}\\
+Composed of a connection mechanism to the platform, a message dispatcher and a set of agent behaviors. Each agent is recognized by a JID(Jabber ID) that looks like (name@host, password) and by an address(xmpp://acc.myprovider.com). Each agent registers to the server as a jabber user(mandatory, not like DF in JADE) which opens a longlived communication stream. \\
+A message dispatcher is responsible for receiving, delivering to a behavior queue(MessageTemplate) and sending messages. \\
+Simultaneous behaviors: Cyclic, OneShot, Periodic, TimeOut, FSM and Event. \\
+Message sending: like JADE \\
+A SPADE agent cannot send nor receive messages until its behaviours are active. That is, do NOT place calls to the send or \_receive methods inside the \_setup and takeDown methods. \\
+Search agent service, Modify Service(update your info in the AMS) \\
+DF: same as Jade \\
+FSM: same as Jade \\
+Event Beh. : The main difference between an Event Behaviour and, say, a One-Shot Behaviour is that the Event Behaviour is not instanced nor is it running until the trigger event happens.\\
+\textbf{The SPADE BDI Agent Model}: Belief-Desire-Intention:
+\begin{itemize}
+	\item Belief: knowledge
+	\item Desire: goals
+	\item Intention: the way the agent has decided to achieve his goals, Plans.
+\end{itemize}
+SPADE deviates from this by using Service Oriented Computing(SOC) together with dynamic compilation of services in SPADE, which we have called Distributed Goal Oriented Computing. \\
+\textbf{SPADEs BDI model}:
+\begin{itemize}
+	\item Belief: Agent knowledge base, insert, delete, make queries.
+	\item Goals and Desires: When an agent expresses a Goal, it means that the agents wishes to accomplish the expression contained in such Goal. When a goal is selected for accomplishment, it becomes active.
+	\item Services: Method offered by the agent to the rest. Services can be composed into a sequence forming the Plans. Services have in their description both a pre-condition (P) and a post-condition (Q). The pre-condition P represents a state of knowledge that must be present in order to execute the Service. The post-condition Q represents the state of knowledge that the agent will achieve once the Service has been invoked.(Like MMSE ocl)
+	\item Plans: Sequence of services to achieve the goals. Agents use plans to achieve their goals. Also they have their own Pre and Post conditions. Services composing a Plan's actions do not necessarily belong to the same agent.
+\end{itemize}
+
+\begin{verbatim}
+Name = "agent@myhost.myprovider.com" . Addresses = ["xmpp://agent@myhost.myprovider.com"]
+\end{verbatim}
+
+\textbf{Knowledge base}: Prolog based \\
+\begin{verbatim}
+ $ agent.saveFact("MyList",[5,6,7,8])
+ $ agent.getFact("MyList")
+ > [5,6,7,8]
+\end{verbatim}
+
+\textbf{Plans and Services}: An agent exposes a method unlike JADE \\
+\begin{verbatim}
+#This is the method executed when the service is invoked
+def s1_method(Value):
+return {"Myoutput1":1} #the return value is a dict containing Facts in the form name:value
+
+#Create the service profile
+s = DF.Service(name="s1", owner=agent.getAID(), inputs=["Value"],outputs=["O1"],P=["Var(Value,0,Int)"],Q=["Var(O1,1,Int)"])
+
+#Finally register the service
+agent.registerService(s, s1_method)
+\end{verbatim}
+
+\begin{verbatim}
+        agent.addPlan(inputs=["Value"],outputs=["O2"],P=["Var(Value,0,Int)"],Q=["Var(O2,2,Int)"], services=["s1","s2"])
+\end{verbatim}
+
+\textbf{GOALS:} \\
+\begin{verbatim}
+g = Goal("Var(O1,1,Int)")
+$ def goalCompletedCB( goal ):
+print "Goal completed!"
+
+$ agent.saveFact("Value",0)
+
+$ agent.setGoalCompletedCB( goalCompletedCB )
+
+$ agent.addGoal( Goal("Var(Value,0,Int)") )
+> "Goal completed!"
+\end{verbatim}
+
+\textbf{BDI}: During the agent execution, classic SPADE behaviours can coexist with the BDI model. Every time that a new Goal is introduced into the agent, it will try to achieve it looking for a Plan that fits the task. All this work happens in a completely transparent way for the user. \\
+Easier to work with knowledge base than JADE and its done in a declarative way. \\
+
+\textbf{Agent platform} \\
+Like JADE we start a server that acts as the main point/base of the agents.
+
+\subsection{JADEX}
+
+https://www.activecomponents.org/bin/view/Documentation/Overview \\
+https://www.activecomponents.org/bin/view/About/Features \\
+
+%\begin{figure}
+%	\begin{center}
+%		\includegraphics[width=\textwidth]{agentclonelogic.jpg}
+%		\caption{Overview of agent and clone logic }
+%		\label{fig:results1}
+%	\end{center}
+%\end{figure}
+
+\section{Evaluation}
+Stub
+\end{document}
