@@ -4,6 +4,7 @@
 \usepackage{graphicx}
 \usepackage{url}
 \usepackage{caption}
+\usepackage{float}
 \usepackage{subcaption}
 
 \title{\textbf{Distributed Artificial Intelligence and Intelligent Agents Project}}
@@ -22,11 +23,9 @@
 
 Stub
 
-\section{Task 1 - GAIIAAAA}
+\section{Task 1 - GAIIA}
 
 \subsection{Requirements Statement}
-
-\subsubsection{Commonalities}
 
 General Commonality Requirements
 \begin{itemize}
@@ -62,63 +61,209 @@ Miscellaneous Commonality Requirements
 
 \subsection{Roles model}
 
-\begin{table}[h!]
+\begin{table}[H]
 	\label{my-label}
-	\begin{tabular}{ll}
+	\begin{tabular}{l p{7cm}}
 		\hline
-		Role Schema              & Profiler          \\
+		Role Schema              & Tourist \\
 		\hline
-		Description              & Short description \\
-		Protocols and Activities &                   \\
-		Permissions              &                   \\
+		Description              & Requests a tour based on the tourists' interests \\
+		Protocols and Activities & \textbf{protocols} FIPA.Request, \textbf{activities} parse and store the reply with the artifacts, initiate a tour as soon as the reply from the curators is parsed \\
+		Permissions              & \textbf{reads} available curators from \textit{DF}, \textbf{reads} tourists' interests, \textbf{changes} local artifact information \\
+		\hline
 		Responsibilities         &                   \\
-		Liveness                 &                   \\
-		Safety                   &                   \\
+		Liveness                 & \(Tourist=(\underline{RequestTour}.StartTour)^\omega \) \\
+		Safety                   & \(interests > 0 \) \\
 		\hline
 	\end{tabular}
 \end{table}
 
-\begin{table}[h!]
+\begin{table}[H]
 	\label{my-label}
-	\begin{tabular}{ll}
+	\begin{tabular}{l p{7cm}}
 		\hline
-		Role Schema              & Curator           \\
+		Role Schema              & Gallery monitoring \\
 		\hline
-		Description              & Short description \\
-		Protocols and Activities &                   \\
-		Permissions              &                   \\
+		Description              & Monitor the artifacts database, perform maintenance tasks on it and reply to tour requests \\
+		Protocols and Activities & \textbf{protocols} Fipa.INFORM, \textbf{activities} perform maintenance tasks on the artifact DB on a regular basis, monitor for problems on artifact DB \\
+		Permissions              & \textbf{changes} artifact database, \textbf{reads} artifact database \\
+		\hline
 		Responsibilities         &                   \\
-		Liveness                 &                   \\
-		Safety                   &                   \\
+		Liveness                 & \(Monitor=\underline{Reply}\star||\underline{MaintainDB}^\omega \) \\
+		Safety                   & \(databaseIntegrity \& noOfRequests < 30 \) \\
 		\hline
 	\end{tabular}
 \end{table}
 
-\begin{table}[h!]
+\begin{table}[H]
 	\label{my-label}
-	\begin{tabular}{ll}
+	\begin{tabular}{l p{7cm}}
 		\hline
-		Role Schema              & Artifact Manager  \\
+		Role Schema              & Bidder \\
 		\hline
-		Description              & Short description \\
-		Protocols and Activities &                   \\
-		Permissions              &                   \\
+		Description              & Participate in an ongoing auction \\
+		Protocols and Activities & \textbf{protocols} Dutch Auction, \textbf{activities} decide on whether to bid according to his strategies \\
+		Permissions              & \textbf{reads} artifact price \\
+		\hline
 		Responsibilities         &                   \\
-		Liveness                 &                   \\
-		Safety                   &                   \\
+		Liveness                 & \(Bidder=\underline{BidInAuction}^\omega \) \\
+		Safety                   & \(interestedInAuctionedItem \) \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[H]
+	\label{my-label}
+	\begin{tabular}{l p{7cm}}
+		\hline
+		Role Schema              & Artifact adder/updater \\
+		\hline
+		Description              & Add in the database or update an item with a newly bought artifact from the auction \\
+		Protocols and Activities & \textbf{activities} add new items to the artifact DB \\
+		Permissions              & \textbf{changes} artifact database, \textbf{reads} artifact database \\
+		\hline
+		Responsibilities         &                   \\
+		Liveness                 & \(Adder=(WaitForItem.\underline{AddInDB})^\omega \) \\
+		Safety                   & \(\forall itemInDatabase = unique \) \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[H]
+	\label{my-label}
+	\begin{tabular}{l p{7cm}}
+		\hline
+		Role Schema              & Auction Initiator \\
+		\hline
+		Description              & Start and coordinate a new auction \\
+		Protocols and Activities & \textbf{protocol} Dutch Auction, \textbf{activities} decide the price of the next item to be auctioned based on its earnings and strategies \\
+		Permissions              & \textbf{reads} artifacts for auction, \textbf{changes} available artifacts for auction \\
+		\hline
+		Responsibilities         &                   \\
+		Liveness                 & \(Initiator=(\underline{ChooseItemAndPrice}.GetBidders.Inform)^\omega \) \\
+		Safety                   & \(auctionProfit > 0  \) \\
 		\hline
 	\end{tabular}
 \end{table}
 
 \subsection{Interaction model}
 
+\subsubsection{Tour}
+
+\begin{figure}[H]
+	\caption{Tour interaction between a Tourist and one of the GalleryMonitors}
+	\centering
+	\includegraphics[scale=0.8]{./images/interaction-tourguide.png}
+\end{figure}
+
+\begin{figure}[H]
+	\caption{Auction initiation: If the bidder wont participate, this interaction ends here.}
+	\centering
+	\includegraphics[scale=0.8]{./images/interaction-auction-init.png}
+\end{figure}
+
+\begin{figure}[H]
+	\caption{Start an auction and the bidders decide if to bid or not}
+	\centering
+	\includegraphics[scale=0.8]{./images/interaction-cfp.png}
+\end{figure}
+
 \subsection{Agent model}
+
+\begin{figure}[H]
+	\caption{Actors and their relation to the roles}
+	\centering
+	\includegraphics[scale=0.8]{./images/agent.png}
+\end{figure}
 
 \subsection{Service model}
 
+\begin{table}[H]
+	\centering
+	\caption{}
+	\label{my-label}
+	\begin{tabular}{lllll}
+		\hline
+		Service & Inputs & Outputs & Pre-condition & Post-condition \\ \hline
+		proposeTour & interests & artifact list & interests \textgreater 0 & profiler has a tour \\
+		startAuction & \begin{tabular}[c]{@{}l@{}}available-\\ Artifacts\end{tabular} & itemToAuction & \begin{tabular}[c]{@{}l@{}}available-\\ Artifacts \textgreater 0\end{tabular} & true \\
+		\begin{tabular}[c]{@{}l@{}}complete-\\ Auction\end{tabular} & bidders, item & outcome & bidders \textgreater 0 & winner $\lor$ low price \\
+		bid & item & decision & true & bid $\lor$ reject proposal \\ \hline
+	\end{tabular}
+\end{table}
+
 \subsection{Acquaintance model}
 
+\begin{figure}[H]
+	\caption{Actors and their communication}
+	\centering
+	\includegraphics[scale=0.8]{./images/acquaintance.png}
+\end{figure}
+
 \subsection{Mobility model}
+
+\begin{table}[H]
+	\centering
+	\caption{All places that tourists can visit and auctions can take place}
+	\label{my-label}
+	\begin{tabular}{lll}
+		\hline
+		Place Types                                                     & Description                                                                                                                                                                                                           & Instances \\ \hline
+		\begin{tabular}[c]{@{}l@{}}museo galileo\\ museum\end{tabular}  & \begin{tabular}[c]{@{}l@{}}A place to see items that comprise a major \\ collection of scientific instruments. Also auctions \\ for relevant artifacts happen to enrich the collection \\ of the museum.\end{tabular} & 1         \\
+		\begin{tabular}[c]{@{}l@{}}Heritage Malta\\ museum\end{tabular} & \begin{tabular}[c]{@{}l@{}}A place to see items that are protected by Maltese \\ national agency for museums. Also auctions for relevant\\ artifacts happen to enrich the collection of the museum.\end{tabular}      & 1         \\ \hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\caption{Agents and their relationship to the places}
+	\label{my-label}
+	\begin{tabular}{llll}
+		\hline
+		Agent Types & Mobile & Place Types & Constraints \\ \hline
+		PrrofilerAgent & - & - & - \\
+		CuratorAgent & $\surd$ & All & 1 in each place \\
+		\begin{tabular}[c]{@{}l@{}}ArtifactManager\\ Agent\end{tabular} & $\surd$ & All & 1 in each place \\ \hline
+	\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+	\caption{Actor-Place cardinality}
+	\centering
+	\includegraphics[scale=0.8]{./images/cardinality.png}
+\end{figure}
+
+\begin{table}[H]
+	\centering
+	\caption{Curator path description}
+	\label{my-label}
+	\begin{tabular}{ll}
+		\hline
+		Agent & CuratorAgent \\ \hline
+		Description & \begin{tabular}[c]{@{}l@{}}An interested curator will move to a museum place\\ to take part in the auction that its been held there.\end{tabular} \\
+		Origin & Any musuem in the world \\
+		Destination & museo galileo or heritage malta \\
+		\begin{tabular}[c]{@{}l@{}}Atomic \\ movements\end{tabular} & Move from the original museum to the destination \\
+		Paths & (Original Museum - Destination - Original Museum)* \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\caption{ArtifactManager path description}
+	\label{my-label}
+	\begin{tabular}{ll}
+		\hline
+		Agent & ArtifactManagerAgent \\ \hline
+		Description & \begin{tabular}[c]{@{}l@{}}An artifact manager will move to a museum place\\ to organize the auction that its been held there.\end{tabular} \\
+		Origin & Any musuem in the world \\
+		Destination & museo galileo or heritage malta \\
+		\begin{tabular}[c]{@{}l@{}}Atomic \\ movements\end{tabular} & Move from the original museum to the destination \\
+		Paths & (Original Museum - Destination - Original Museum)* \\
+		\hline
+	\end{tabular}
+\end{table}
 
 \section{Task 2 - AgentUML}
 
