@@ -279,6 +279,26 @@ Miscellaneous Commonality Requirements
 \end{figure}
 
 \section{Task 3 - UML and Behaviours}
+\begin{figure}[H]
+	\caption{Dutch auction}
+	\centering
+	\includegraphics[scale=0.9]{./images/profilerUML.jpg}
+\end{figure}
+\begin{figure}[H]
+	\caption{Dutch auction}
+	\centering
+	\includegraphics[scale=0.9]{./images/curatorUML.jpg}
+\end{figure}
+\begin{figure}[H]
+	\caption{Dutch auction}
+	\centering
+	\includegraphics[scale=0.9]{./images/curator2UML.jpg}
+\end{figure}
+\begin{figure}[H]
+	\caption{Dutch auction}
+	\centering
+	\includegraphics[scale=0.9]{./images/artifactmanagerUML.jpg}
+\end{figure}
 
 \section{Task 4 - ROMAS}
 \begin{enumerate}
@@ -295,8 +315,32 @@ Miscellaneous Commonality Requirements
 \item Generate code for agents with roles bound
 \end{enumerate}
 \subsection{Capture Use-cases}
+\begin{figure}[H]
+	\caption{ROMAS Identified Use Cases}
+	\centering
+	\includegraphics[width=\textwidth]{./images/ROMASusecases.png}
+\end{figure}
+
 \subsection{Identify Roles from Use-cases}
+The only really important roles discovered are:
+\begin{itemize}
+\item Auctioneer - Person selling an item and arranging the auction
+\item Buyer - Person who takes part in an auction
+\item Visitor - Person who visits exhibitions (requests tours)
+\end{itemize}
 \subsection{Construct Role Organization}
+\begin{figure}[H]
+	\caption{ROMAS Role Organization}
+	\centering
+	\includegraphics[width=\textwidth]{./images/ROMASroleorganization.png}
+\end{figure}
+
+Each role corresponds to an agent: Auctioneer - ArtistManagementAgent, Buyer - CuratorAgent,
+Visitor - ProfilerAgent.
+
+Because of this one-to-one relationship between agents and roles, the role automata are all
+trivial.
+
 \section{Task 5 - Framework comparison}
 
 https://en.wikipedia.org/wiki/FIPA \\
