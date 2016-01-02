@@ -5,6 +5,7 @@
 \usepackage{caption}
 \usepackage{float}
 \usepackage{subcaption}
+\usepackage{fancyvrb}
 
 \title{\textbf{Distributed Artificial Intelligence and Intelligent Agents Project}}
 \author{KTH Royal Institute of Technology \\ 
@@ -17,6 +18,10 @@
 \maketitle
 
 \tableofcontents
+
+\section{Introduction}
+
+In the previous homeworks we focused on a hands-on experience of creating autonomous JADE agents by following the instructions as guidance. This project focuses on approaching the theoretical analysis with a variety of methods but all of them are based on a software design way of thinking. To complete the analysis we compared two frameworks that are publicly available with JADE, the framework we used in all of our homeworks.
 
 \section{Task 1 - GAIIA}
 
@@ -275,22 +280,22 @@ Miscellaneous Commonality Requirements
 \end{figure}
 
 \begin{figure}[H]
-	\caption{Profiler State-chart diagram}
+	\caption{Profiler State-chart diagram - Tour Request}
 	\centering
 	\includegraphics[scale=0.9]{./images/profilerUML.jpg}
 \end{figure}
 \begin{figure}[H]
-	\caption{Curator State-chart diagram}
-	\centering
-	\includegraphics[scale=0.9]{./images/curatorUML.jpg}
-\end{figure}
-\begin{figure}[H]
-	\caption{Curator State-chart diagram 2}
+	\caption{Curator State-chart diagram - Tour response}
 	\centering
 	\includegraphics[scale=0.9]{./images/curator2UML.jpg}
 \end{figure}
 \begin{figure}[H]
-	\caption{ArtifactManagement State-chart diagram}
+	\caption{Curator State-chart diagram - Auction bidding}
+	\centering
+	\includegraphics[scale=0.9]{./images/curatorUML.jpg}
+\end{figure}
+\begin{figure}[H]
+	\caption{ArtifactManager State-chart diagram - Auction coordinator}
 	\centering
 	\includegraphics[scale=0.9]{./images/artifactmanagerUML.jpg}
 \end{figure}
@@ -344,27 +349,28 @@ Visitor - ProfilerAgent.
 Because of this one-to-one relationship between agents and roles, the role automata are all
 trivial.
 
+\clearpage
+
 \section{Task 5 - Framework comparison}
 
-https://en.wikipedia.org/wiki/FIPA \\
-Options(Choose 2) \\
-Looks too corporate-y - http://www.agent-software.com.au/products/jack/ \\
-JIAC - IJava framework - http://repositories.dai-labor.de/sites/jiactng/5.1.5/ \\
-SPADE - Python framework - https://github.com/javipalanca/spade \\
-JADEX - https://www.activecomponents.org/bin/view/About/Features \\
+For the framework comparison we chose to compare: 
+\begin{itemize}
+	\item SPADE - Python framework
+	\subitem https://github.com/javipalanca/spade
+	\item JADEX - JADE extension
+	\subitem https://www.activecomponents.org/bin/view/About/Features
+\end{itemize}
 
-My choice would be the SPADE and JADEX. \\
-
-We have to compare:
+\noindent We have to compare:
 \begin{itemize}
 	\item Architecture of platform
 	\item Services provided by it
-	\item Comparison of implementaBon of a simple scenario	same as	Question 2 (i.e.	Service Implementation,	Service	Registration and Service Discovery)
+	\item Comparison of implementation of a simple scenario	same as	Question 2 (i.e.	Service Implementation,	Service	Registration and Service Discovery)
 	\item Notable projects using it
-	\item Personal opinion on practical issues compared to JADE, we could use point 3 as a starting point.
+	\item Personal opinion on practical issues compared to JADE, \textbf{we could use point 3 as a starting point.}
 \end{itemize}
 
-\textbf{FIPA compliance}: 
+\noindent For a framework to be called \textbf{FIPA compliant} it has to satisfy the following bullets(among others): 
 \begin{itemize}
 	\item Agent Communication Channel(ACC): A mechanism which allows the platform and the agents in it to communicate with each other.
 	\item Agent Management System(AMS): A way for the agents to be registered in the platform and be reachable for contact.
@@ -372,7 +378,13 @@ We have to compare:
 	\item Agent Communication Language(ACL): Common agent language, two possible syntaxes XML or Lisp based.
 \end{itemize}
 
-\subsection{SPADE}
+\subsection{SPADE - Python}
+
+\begin{figure}[H]
+	\caption{SPADE architecture overview}
+	\centering
+	\includegraphics[scale=0.7]{./images/spade_overview.png}
+\end{figure}
 
 Agent platform based on XMPP and Jabber. User(agent) and Server(platform). Agents can be in any programming language if they conform to XMPP protocol.
 
@@ -380,34 +392,51 @@ Agent platform based on XMPP and Jabber. User(agent) and Server(platform). Agent
 Features: \\
 \begin{itemize}
 	\item Open, public, free
-	\item Asynchronous: If user online guarantee of delivery, if offline store and forward message until the client reconnects. Ease of talking with non-human systems.
+	\item Asynchronous: If the user is online, it guarantees the delivery. If offline store and forward message until the client reconnects. Ease of talking with non-human systems.
 	\item Decentralized: Anyone can have a server, in fact its a server network, choice of whether to trust a server.
 	\item Secure
 	\item Extensible
 	\item Flexible: XML messaging based tech has a myriad of uses, IM is just one of them. Jabber applications beyond IM include network management, content syndication, collaboration tools, file sharing, gaming, remote systems monitoring and, now, agent communication.
 \end{itemize}
 
-\textbf{SPADE Agent Library}\\
-Module to build SPADE agents that work with the SPADE Agent Platform.
+\noindent The main \textbf{modules} of \textit{SPADE} are: \\
 
-\textbf{SPADE Agent Model}\\
-Composed of a connection mechanism to the platform, a message dispatcher and a set of agent behaviors. Each agent is recognized by a JID(Jabber ID) that looks like (name@host, password) and by an address(xmpp://acc.myprovider.com). Each agent registers to the server as a jabber user(mandatory, not like DF in JADE) which opens a longlived communication stream. \\
-A message dispatcher is responsible for receiving, delivering to a behavior queue(MessageTemplate) and sending messages. \\
-Simultaneous behaviors: Cyclic, OneShot, Periodic, TimeOut, FSM and Event. \\
-Message sending: like JADE \\
-A SPADE agent cannot send nor receive messages until its behaviours are active. That is, do NOT place calls to the send or \_receive methods inside the \_setup and takeDown methods. \\
-Search agent service, Modify Service(update your info in the AMS) \\
-DF: same as Jade \\
-FSM: same as Jade \\
-Event Beh. : The main difference between an Event Behaviour and, say, a One-Shot Behaviour is that the Event Behaviour is not instanced nor is it running until the trigger event happens.\\
-\textbf{The SPADE BDI Agent Model}: Belief-Desire-Intention:
+\textbf{SPADE Agent Library:} Module to build SPADE agents that work with the SPADE Agent Platform. \\
+
+\textbf{SPADE Agent Model:} Composed of a connection mechanism to the platform, a message dispatcher and a set of agent behaviors. Each agent is recognized by a JID(Jabber ID) that looks like \{name@host, password\} and by an address(xmpp://acc.myprovider.com). Each agent registers to the server as a jabber user(mandatory, not like DF in JADE) which opens a longlived communication stream. A message dispatcher is responsible for receiving, delivering to a behavior queue(filtered by a MessageTemplate) and sending messages.
+\begin{verbatim}
+Name = "agent@myhost.myprovider.com" .
+Addresses = ["xmpp://agent@myhost.myprovider.com"]
+\end{verbatim}
+Moving on to the \textbf{behaviors}, a \textit{SPADE} agent cannot send nor receive messages until its behaviors are active. This means, that we can not place calls to the send or \_receive methods inside the \_setup and takeDown methods. \\
+The agent can have the following simultaneous behaviors: 
+\begin{itemize}
+	\item Same as JADE
+		\subitem Cyclic 
+		\subitem OneShot 
+		\subitem Periodic
+		\subitem TimeOut 
+		\subitem FSM
+	\item Different compared to \textit{JADE}
+		\subitem Event: The main difference between an Event Behaviour and, say, a One-Shot Behaviour is that the Event Behaviour is not instanced nor is it running until the trigger event happens.
+\end{itemize}
+The \textbf{services} provided by \textit{SPADE} are:
+\begin{itemize}
+	\item Message sending via a a dispatcher: Similar to JADE
+	\item Directory Facilitator: similar to JADE
+	\item Search agent service
+	\item Modify service which updates the agent information in the AMS
+\end{itemize}
+
+\noindent \textbf{The SPADE BDI Agent Model}: Belief-Desire-Intention:
 \begin{itemize}
 	\item Belief: knowledge
 	\item Desire: goals
 	\item Intention: the way the agent has decided to achieve his goals, Plans.
 \end{itemize}
 SPADE deviates from this by using Service Oriented Computing(SOC) together with dynamic compilation of services in SPADE, which we have called Distributed Goal Oriented Computing. \\
-\textbf{SPADEs BDI model}:
+
+\noindent \textbf{SPADEs BDI model}:
 \begin{itemize}
 	\item Belief: Agent knowledge base, insert, delete, make queries.
 	\item Goals and Desires: When an agent expresses a Goal, it means that the agents wishes to accomplish the expression contained in such Goal. When a goal is selected for accomplishment, it becomes active.
@@ -415,39 +444,37 @@ SPADE deviates from this by using Service Oriented Computing(SOC) together with 
 	\item Plans: Sequence of services to achieve the goals. Agents use plans to achieve their goals. Also they have their own Pre and Post conditions. Services composing a Plan's actions do not necessarily belong to the same agent.
 \end{itemize}
 
-\begin{verbatim}
-Name = "agent@myhost.myprovider.com" . Addresses = ["xmpp://agent@myhost.myprovider.com"]
-\end{verbatim}
-
-\textbf{Knowledge base}: Prolog based \\
-\begin{verbatim}
+\noindent \textbf{Knowledge base}: Prolog based \\
+\begin{Verbatim}[xleftmargin=.2in]
  $ agent.saveFact("MyList",[5,6,7,8])
  $ agent.getFact("MyList")
  > [5,6,7,8]
-\end{verbatim}
+\end{Verbatim}
 
-\textbf{Plans and Services}: An agent exposes a method unlike JADE \\
-\begin{verbatim}
+\noindent \textbf{Plans and Services}: An agent exposes a method unlike JADE \\
+\begin{Verbatim}[xleftmargin=.2in]
 #This is the method executed when the service is invoked
 def s1_method(Value):
-return {"Myoutput1":1} #the return value is a dict containing Facts in the form name:value
+    return {"Myoutput1":1} 
+#the return value is a dict 
+containing Facts in the form name:value
 
 #Create the service profile
-s = DF.Service(name="s1", owner=agent.getAID(), inputs=["Value"],outputs=["O1"],P=["Var(Value,0,Int)"],Q=["Var(O1,1,Int)"])
+s = DF.Service(name="s1", owner=agent.getAID(),
+    inputs=["Value"],outputs=["O1"],P=["Var(Value,0,Int)"],Q=["Var(O1,1,Int)"])
 
 #Finally register the service
 agent.registerService(s, s1_method)
-\end{verbatim}
 
-\begin{verbatim}
-        agent.addPlan(inputs=["Value"],outputs=["O2"],P=["Var(Value,0,Int)"],Q=["Var(O2,2,Int)"], services=["s1","s2"])
-\end{verbatim}
+agent.addPlan(inputs=["Value"],outputs=["O2"],P=["Var(Value,0,Int)"],
+			  Q=["Var(O2,2,Int)"],services=["s1","s2"])
+\end{Verbatim}
 
-\textbf{GOALS:} \\
-\begin{verbatim}
+\noindent \textbf{GOALS:} \\
+\begin{Verbatim}[xleftmargin=.2in]
 g = Goal("Var(O1,1,Int)")
 $ def goalCompletedCB( goal ):
-print "Goal completed!"
+      print "Goal completed!"
 
 $ agent.saveFact("Value",0)
 
@@ -455,18 +482,24 @@ $ agent.setGoalCompletedCB( goalCompletedCB )
 
 $ agent.addGoal( Goal("Var(Value,0,Int)") )
 > "Goal completed!"
-\end{verbatim}
+\end{Verbatim}
 
-\textbf{BDI}: During the agent execution, classic SPADE behaviours can coexist with the BDI model. Every time that a new Goal is introduced into the agent, it will try to achieve it looking for a Plan that fits the task. All this work happens in a completely transparent way for the user. \\
+\noindent \textbf{BDI}: During the agent execution, classic SPADE behaviours can coexist with the BDI model. Every time that a new Goal is introduced into the agent, it will try to achieve it looking for a Plan that fits the task. All this work happens in a completely transparent way for the user. \\
 Easier to work with knowledge base than JADE and its done in a declarative way. \\
 
-\textbf{Agent platform} \\
-Like JADE we start a server that acts as the main point/base of the agents.
+\noindent \textbf{Agent platform:} Like JADE we start a server that acts as the main point/base of the agents.
 
 \subsection{JADEX}
 
-BDI based \\
+\begin{figure}[H]
+	\caption{JADEX agent architecture overview}
+	\centering
+	\includegraphics[scale=0.7]{./images/jadex_overview.png}
+\end{figure}
 
+\textit{JADE} contains only simple behaviors that react to the messages received and in general they resemble robots with no actual intelligence. The \textit{JADEX} extension comes into play to enrich the framework with BDI capabilities that work with the previously provided ones. \\
+
+Being an extension it shares the basic architecture features with its base framework. 
 
 \subsection{Comparison}
 
