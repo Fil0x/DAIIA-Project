@@ -156,6 +156,8 @@ Miscellaneous Commonality Requirements
 	\includegraphics[scale=0.8]{./images/interaction-tourguide.png}
 \end{figure}
 
+\subsubsection{Auction}
+
 \begin{figure}[H]
 	\caption{Auction initiation: If the bidder wont participate, this interaction ends here.}
 	\centering
@@ -361,16 +363,16 @@ For the framework comparison we chose to compare:
 	\subitem https://www.activecomponents.org/bin/view/About/Features
 \end{itemize}
 
-\noindent We have to compare:
+\noindent And they will be compared in the following subjects:
 \begin{itemize}
 	\item Architecture of platform
 	\item Services provided by it
-	\item Comparison of implementation of a simple scenario	same as	Question 2 (i.e.	Service Implementation,	Service	Registration and Service Discovery)
+	\item Comparison of implementation of a simple scenario(i.e. Service Implementation,	Service	Registration and Service Discovery)
 	\item Notable projects using it
 	\item Personal opinion on practical issues compared to JADE, \textbf{we could use point 3 as a starting point.}
 \end{itemize}
 
-\noindent For a framework to be called \textbf{FIPA compliant} it has to satisfy the following bullets(among others): 
+\noindent For a framework to be called \textbf{FIPA compliant} it has to contain the following modules and features(among others): 
 \begin{itemize}
 	\item Agent Communication Channel(ACC): A mechanism which allows the platform and the agents in it to communicate with each other.
 	\item Agent Management System(AMS): A way for the agents to be registered in the platform and be reachable for contact.
@@ -403,12 +405,13 @@ Features: \\
 
 \textbf{SPADE Agent Library:} Module to build SPADE agents that work with the SPADE Agent Platform. \\
 
-\textbf{SPADE Agent Model:} Composed of a connection mechanism to the platform, a message dispatcher and a set of agent behaviors. Each agent is recognized by a JID(Jabber ID) that looks like \{name@host, password\} and by an address(xmpp://acc.myprovider.com). Each agent registers to the server as a jabber user(mandatory, not like DF in JADE) which opens a longlived communication stream. A message dispatcher is responsible for receiving, delivering to a behavior queue(filtered by a MessageTemplate) and sending messages.
+\textbf{SPADE Agent Model:} Composed of a connection mechanism to the platform, a message dispatcher and a set of agent behaviors. Each agent is recognized by a JID(Jabber ID) that looks like \{name@host, password\} and by an address(xmpp://acc.myprovider.com). Each agent registers to the server as a jabber user(mandatory, not like \textit{Directory Facilitator} in JADE) which opens a longlived communication stream. A message dispatcher is responsible for receiving, delivering to a behavior queue(filtered by a MessageTemplate) and sending messages. \\ 
+Below we see an agent's \textit{Jabber} name and address:
 \begin{verbatim}
 Name = "agent@myhost.myprovider.com" .
 Addresses = ["xmpp://agent@myhost.myprovider.com"]
 \end{verbatim}
-Moving on to the \textbf{behaviors}, a \textit{SPADE} agent cannot send nor receive messages until its behaviors are active. This means, that we can not place calls to the send or \_receive methods inside the \_setup and takeDown methods. \\
+Moving on to the \textbf{behaviors}, a \textit{SPADE} agent may have multiple behaviours running but he cannot send nor receive messages until they are active. This means, that we can not place calls to the send or \_receive methods inside the \_setup and takeDown methods. \\
 The agent can have the following simultaneous behaviors: 
 \begin{itemize}
 	\item Same as JADE
@@ -457,7 +460,7 @@ SPADE deviates from this by using Service Oriented Computing(SOC) together with 
 def s1_method(Value):
     return {"Myoutput1":1} 
 #the return value is a dict 
-containing Facts in the form name:value
+#containing Facts in the form name:value
 
 #Create the service profile
 s = DF.Service(name="s1", owner=agent.getAID(),
@@ -494,12 +497,50 @@ Easier to work with knowledge base than JADE and its done in a declarative way. 
 \begin{figure}[H]
 	\caption{JADEX agent architecture overview}
 	\centering
-	\includegraphics[scale=0.7]{./images/jadex_overview.png}
+	\includegraphics[scale=0.6]{./images/jadex_overview.png}
 \end{figure}
 
-\textit{JADE} contains only simple behaviors that react to the messages received and in general they resemble robots with no actual intelligence. The \textit{JADEX} extension comes into play to enrich the framework with BDI capabilities that work with the previously provided ones. \\
+\textit{JADE} contains only simple behaviors that respond to the messages received and in general they resemble robots with no actual intelligence but reactive capabilities. The \textit{JADEX} extension comes into play to enrich the framework with BDI capabilities that are able to cooperate with the vanilla behaviours of \textit{JADE}. \\
 
-Being an extension it shares the basic architecture features with its base framework. 
+Being an extension it shares the basic architecture features with its base framework. Except the \textit{autonomous}, \textit{reactive} and \textit{social} agents that we get from \textit{JADE}, this extension gives us \textit{proactive} agents that work with \textit{mentalistic notions} like beliefs, desires and intentions. \\
+
+The extension provides a unified execution infrastructure for different kinds of entities(e.g. agents or workflows). The foundation of \textit{JADEX} is called \textit{active component} which unifies base concepts of software components with that of a minimal agent. The driving motivation for the architecture is to simplify the development of complex distributed applications. With this in mind, the first step is to introduce a middleware that aids in addressing common challenges of such applications. Such challenges are: 
+\begin{itemize}
+	\item Dealing with concurrency
+	\item Realizing applications composed of heterogeneous components
+	\item Offering a variety of interaction styles
+	\item Monitoring and debugging
+\end{itemize} 
+
+\begin{figure}[H]
+	\caption{JADEX Modules}
+	\centering
+	\includegraphics[scale=0.7]{./images/jadex_modules.png}
+\end{figure}
+
+Focusing on the architecture, \textit{JADEX} distinguishes three modules that run on the infrastructure: 
+\begin{itemize}
+	\item Platforms: Component management and also administration capabilities such as messaging or component service registry
+	\item Kernel: Encapsulates the internal behaviour definition of a specific active component type. There are 3 kinds of kernel: agent(BDI, micro), workflow(steer control flow), application(structural information about the application type).
+	\item Active component: An autonomous and managed software entity that may expose publicly accessible service interfaces and is capable of interacting with other active components in different modes for example message passing and method calls.
+\end{itemize}
+
+\begin{figure}[H]
+	\caption{JADEX Platform}
+	\centering
+	\includegraphics[scale=0.7]{./images/jadex_platform.png}
+\end{figure}
+
+\clearpage
+
+\noindent Some noteable projects using \textit{JADEX} are:
+\begin{itemize}
+	\item MedPAge: Agent-based hospital scheduling, an agent based application to improve treatment scheduling for patients
+	\item Go4Flex: Agile process management, providing advanced conceptual and software technical means for modeling and executing complex business processes
+	\item SodekoVS: Systematically engineering self-organizing systems, aims at tackling team coordination problems by utilizing nature-inspired design paradigms
+\end{itemize}
+
+
 
 \subsection{Comparison}
 
@@ -508,8 +549,11 @@ Being an extension it shares the basic architecture features with its base frame
 	\item - Jade and JADEX need a framework developed for them to run on, whereas SPADE runs on existing ones namely XMPP and Jabber
 	\item + All 3 comply to the FIPA protocol e.g. ACL messages, performative etc
 	\item + An agent is just a black box for the ones outside with the only way of communicating being via message passing
-	\item 
+	\item - JADEX xml config files, JADE and SPADE simple classes
 \end{itemize}
+
+\noindent \textbf{Services:} \\
+ 
 
 %\begin{figure}
 %	\begin{center}
