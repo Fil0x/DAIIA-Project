@@ -305,9 +305,9 @@ Miscellaneous Commonality Requirements
 \subsection{Class diagrams}
 
 \begin{figure}[H]
-	\caption{Supposed to be a class diagram}
+	\caption{ProfilerAgent Class Diagram}
 	\centering
-	\includegraphics[scale=0.9]{./images/artifactmanagerUML.jpg}
+	\includegraphics[width=\textwidth]{./images/profiler.png}
 \end{figure}
 
 \section{Task 4 - ROMAS}
@@ -540,7 +540,46 @@ Focusing on the architecture, \textit{JADEX} distinguishes three modules that ru
 	\item SodekoVS: Systematically engineering self-organizing systems, aims at tackling team coordination problems by utilizing nature-inspired design paradigms
 \end{itemize}
 
+\noindent \textbf{Services:} \\
+\begin{verbatim}
+//Registering a service
+package tutorial;
+import ...
 
+@Description("This agent declares a required clock service.")
+@Agent
+@RequiredServices(@RequiredService(name="clockservice", type=IClockService.class,
+  binding=@Binding(scope=RequiredServiceInfo.SCOPE_PLATFORM)))
+public class ChatC1Agent
+{
+}
+
+//Invoking a predefined service
+IFuture<IClockService> fut = agent.getServiceContainer()
+                  .getRequiredService("clockservice");
+fut.addResultListener(new DefaultResultListener<IClockService>()
+{
+     public void resultAvailable(IClockService cs)
+      {
+              System.out.println("Time for a chat, buddy:
+                       "+new Date(cs.getTime()));
+               }
+});
+
+//Searching for a service
+IFuture<IComponentFactory> factory = 
+            SServiceProvider.getService(agent.getServiceContainer(),
+            new ComponentFactorySelector(MicroAgentFactory.FILETYPE_MICROAGENT));
+factory.addResultListener(agent.createResultListener(
+       new DefaultResultListener<IComponentFactory>()
+{
+     public void resultAvailable(IComponentFactory result)
+      {
+              System.out.println("Found: "+result);
+               }
+}));
+
+\end{verbatim}
 
 \subsection{Comparison}
 
@@ -550,10 +589,9 @@ Focusing on the architecture, \textit{JADEX} distinguishes three modules that ru
 	\item + All 3 comply to the FIPA protocol e.g. ACL messages, performative etc
 	\item + An agent is just a black box for the ones outside with the only way of communicating being via message passing
 	\item - JADEX xml config files, JADE and SPADE simple classes
+        \item - Service registration/retrieval of JADEX is as bloated as its counterpart in Jade.
 \end{itemize}
 
-\noindent \textbf{Services:} \\
- 
 
 %\begin{figure}
 %	\begin{center}
